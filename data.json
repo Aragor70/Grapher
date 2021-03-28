@@ -1,6 +1,16 @@
 {
-    "users": [
-        { "id": "1", "name": "Bambino", "password": "qwerty123" },
-        { "id": "2", "name": "Ciao", "password": "qwerty123" }
-    ]
+  "users": [
+    {
+      "id": "1",
+      "name": "Bambino",
+      "email": "bambino@gmail.com",
+      "password": "qwerty123"
+    },
+    {
+      "name": "MeToo",
+      "email": "me@gmail.com",
+      "password": "hi",
+      "id": "NcvJMZq"
+    }
+  ]
 }

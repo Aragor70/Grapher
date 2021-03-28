@@ -1,5 +1,5 @@
 const { default: axios } = require('axios');
-const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } = require('graphql');
+const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLNonNull } = require('graphql');
  
 
 const Users = [
@@ -15,6 +15,9 @@ const User = new GraphQLObjectType({
       type: GraphQLString
     },
     name: {
+      type: GraphQLString
+    },
+    email: {
       type: GraphQLString
     },
     password: {
@@ -40,7 +43,7 @@ const RootQuery = new GraphQLObjectType({
         } */
         try {
 
-          const res = await axios.get(`http://localhost:3000/users/${args.id}`);
+          const res = await axios.get(`http://localhost:8000/users/${args.id}`);
           return res.data;
 
         } catch (err) {
@@ -54,7 +57,7 @@ const RootQuery = new GraphQLObjectType({
       async resolve(parent, args) {
         try {
 
-          const res = await axios.get(`http://localhost:3000/users`);
+          const res = await axios.get(`http://localhost:8000/users`);
           return res.data;
 
         } catch (err) {
@@ -66,7 +69,67 @@ const RootQuery = new GraphQLObjectType({
   })
 })
 
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addUser: {
+      type: User,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        email: {type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+
+      },
+      async resolve(parent, args) {
+        try {
+          const res = await axios.post('http://localhost:8000/users', {
+            name: args.name, email: args.email, password: args.password
+          })
+          return res.data
+        } catch (err) {
+          console.log(err.message)
+        }
+      }
+    },
+    deleteUser: {
+      type: User,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        
+
+      },
+      async resolve(parent, args) {
+        try {
+          const res = await axios.delete(`http://localhost:8000/users/${args.id}`)
+          return res.data
+        } catch (err) {
+          console.log(err.message)
+        }
+      }
+    },
+    updateUser: {
+      type: User,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: GraphQLString },
+        email: {type: GraphQLString },
+        password: { type: GraphQLString },
+
+      },
+      async resolve(parent, args) {
+        try {
+          const res = await axios.patch(`http://localhost:8000/users/${args.id}`, args)
+          return res.data
+        } catch (err) {
+          console.log(err.message)
+        }
+      }
+    },
+  }
+})
+
 
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation
 })

@@ -5,12 +5,9 @@ const graphqlHTTP = require('express-graphql').graphqlHTTP
 
 const router = express.Router();
 
-var root = { hello: () => 'Ciao' };
-
 router.get('/', graphqlHTTP({
 
     schema: User,
-    rootValue: root,
     graphiql: true,
 
   }
