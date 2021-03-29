@@ -1,16 +1,45 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Login from './interface/auth/Login';
 import Register from './interface/auth/Register';
+import { gql } from '@apollo/client';
 
-
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 
 
 const App = ({ history }) => {
 
+  const client = new ApolloClient({
+    uri: 'http://localhost:5000/graphql',
+    cache: new InMemoryCache()
+  });
   
+  useEffect(() => {
+    
+    client
+    .query({
+      query: gql`
+        query RootQueryType {
+          user(id: "1") {
+            id,
+            name,
+            email,
+            password
+          }
+        }
+      `
+    })
+    .then(result => console.log(result));
+
+
+  }, [])
+  
+
+
   return (
     <Fragment>
+      <ApolloProvider client={client}>
       <header className="header-content">
           <h1 onClick={e => history.push('/') }>Grapher</h1>
       </header>
@@ -36,7 +65,7 @@ const App = ({ history }) => {
 
         </Switch>
       </main>
-
+      </ApolloProvider>
     </Fragment>
   );
 }
