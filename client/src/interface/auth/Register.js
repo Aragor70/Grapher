@@ -1,8 +1,9 @@
 import React, { Fragment, useState } from 'react';
 
+import { gql } from '@apollo/client';
 
 
-const Register = () => {
+const Register = ({ client }) => {
 
 
     const [ formData, setFormData ] = useState({
@@ -14,6 +15,32 @@ const Register = () => {
 
     const { name, email, password, passwordConfirm } = formData;
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData)
+        if (!name || !email || !password) {
+            return false
+        }
+        if (password !== passwordConfirm) {
+            return false
+        }
+
+        client
+        .mutate({
+            mutation: gql`
+            mutation {
+            addUser(name: "${name}", email: "${email}", password: "${password}") {
+                name,
+                email,
+                password
+              }
+            }
+          `
+        })
+        .then(result => console.log(result));
+
+
+    }
 
     const handleChange = (e) => {
         return setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -21,7 +48,7 @@ const Register = () => {
 
     return (
         <Fragment>
-            <form>
+            <form onSubmit={e=> handleSubmit(e)}> 
                 <h1>Register</h1>
 
                 <label className="auth-label">

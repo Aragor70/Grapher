@@ -60,7 +60,7 @@ const App = ({ history }) => {
             <Login />
           </Route>
           <Route exact path="/register">
-            <Register />
+            <Register client={client} />
           </Route>
 
         </Switch>
