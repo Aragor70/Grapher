@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Login from './interface/auth/Login';
 import Register from './interface/auth/Register';
@@ -6,6 +6,8 @@ import { gql } from '@apollo/client';
 
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client';
+import setAuthToken from './utils/setAuthToken';
+import { loadUser, logout } from './actions/auth';
 
 
 const App = ({ history }) => {
@@ -14,26 +16,30 @@ const App = ({ history }) => {
     uri: 'http://localhost:5000/graphql',
     cache: new InMemoryCache()
   });
+
+  const [ isAuthenticated, setIsAuthenticated ] = useState(false)
+
+  const [ user, setUser ] = useState(null);
   
   useEffect(() => {
     
-    client
-    .query({
-      query: gql`
-        query RootQueryType {
-          user(id: "1") {
-            id,
-            name,
-            email,
-            password
-          }
-        }
-      `
-    })
-    .then(result => console.log(result));
+    if (localStorage.token) {
 
+      const checkIn = async() => {
+        await setAuthToken(localStorage.token)
+        const res = await loadUser(client);
 
-  }, [])
+        setUser(res.user || null)
+        setIsAuthenticated(res.isAuthenticated || false)
+      }
+      checkIn()
+
+    } else {
+      setUser(null)
+      setIsAuthenticated(false)
+    }
+
+  }, [loadUser, localStorage.token])
   
 
 
@@ -46,21 +52,35 @@ const App = ({ history }) => {
       <main className="output">
         <Switch>
           <Route exact path="/">
-            <p>Hi, Please log in.</p>
-            <p>
-              <p>
-                <span onClick={e => history.push('/login') }>log in</span>
-              </p>
-              <p>
-                <span onClick={e => history.push('/register') }>register</span>
-              </p>
-            </p>
+
+            {
+              isAuthenticated && user ? <Fragment>
+                <p>{user.name}</p>
+                <p>You are logged in</p>
+
+                <button onClick={e=> logout(history, setUser, setIsAuthenticated)}>log out</button>
+
+              </Fragment> : <Fragment>
+
+                  <p>Hi, Please log in.</p>
+                <p>
+                  <p>
+                    <span onClick={e => history.push('/login') }>log in</span>
+                  </p>
+                  <p>
+                    <span onClick={e => history.push('/register') }>register</span>
+                  </p>
+                </p>
+
+              </Fragment>
+            }
+            
           </Route>
           <Route exact path="/login">
-            <Login />
+            <Login client={client} isAuthenticated={isAuthenticated} />
           </Route>
           <Route exact path="/register">
-            <Register client={client} />
+            <Register client={client} isAuthenticated={isAuthenticated} />
           </Route>
 
         </Switch>

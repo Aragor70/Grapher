@@ -1,9 +1,18 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import { login } from '../../actions/auth';
 
 
 
-const Login = () => {
+const Login = ({ client, history, isAuthenticated }) => {
 
+    useEffect(() => {
+
+        if (isAuthenticated) {
+            history.push('/')
+        }
+
+    }, [])
 
     const [ formData, setFormData ] = useState({
         email: '',
@@ -12,13 +21,26 @@ const Login = () => {
     
     const { email, password } = formData;
 
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        console.log(formData)
+        if (!email || !password) {
+            return false
+        }
+        
+
+        await login(formData, client, history)
+
+
+    }
+
     const handleChange = (e) => {
         return setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     return (
         <Fragment>
-            <form>
+            <form onSubmit={e=> handleSubmit(e)}>
                 <h1>Login</h1>
 
                 <label className="auth-label">
@@ -34,4 +56,4 @@ const Login = () => {
         </Fragment>
     );
 }
-export default Login;
+export default withRouter(Login);

@@ -1,10 +1,17 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+import { register } from '../../actions/auth';
 
-import { gql } from '@apollo/client';
 
+const Register = ({ client, history, isAuthenticated }) => {
 
-const Register = ({ client }) => {
+    useEffect(() => {
 
+        if (isAuthenticated) {
+            history.push('/')
+        }
+
+    }, [])
 
     const [ formData, setFormData ] = useState({
         name: '',
@@ -15,7 +22,7 @@ const Register = ({ client }) => {
 
     const { name, email, password, passwordConfirm } = formData;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         console.log(formData)
         if (!name || !email || !password) {
@@ -25,19 +32,7 @@ const Register = ({ client }) => {
             return false
         }
 
-        client
-        .mutate({
-            mutation: gql`
-            mutation {
-            addUser(name: "${name}", email: "${email}", password: "${password}") {
-                name,
-                email,
-                password
-              }
-            }
-          `
-        })
-        .then(result => console.log(result));
+        await register(formData, client, history)
 
 
     }
@@ -69,4 +64,4 @@ const Register = ({ client }) => {
         </Fragment>
     );
 }
-export default Register;
+export default withRouter(Register);

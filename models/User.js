@@ -33,7 +33,8 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: User,
       args: {
-        id: { type: GraphQLString }
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
       },
       async resolve(parent, args) {
         /* for (let i = 0; i < users.length; i++) {
@@ -42,9 +43,11 @@ const RootQuery = new GraphQLObjectType({
           }
         } */
         try {
+          
 
-          const res = await axios.get(`http://localhost:8000/users/${args.id}`);
-          return res.data;
+          const res = await axios.get(`http://localhost:8000/users/`);
+          
+          return res.data.filter(el => el.email.toString() === args.email && el.password.toString() === args.password)[0] || false;
 
         } catch (err) {
           console.log(err.message)
@@ -57,7 +60,9 @@ const RootQuery = new GraphQLObjectType({
       async resolve(parent, args) {
         try {
 
-          const res = await axios.get(`http://localhost:8000/users`);
+          const res = await axios.get(`http://localhost:8000/users`, {
+            name: args.name
+          });
           return res.data;
 
         } catch (err) {
