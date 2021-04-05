@@ -1,4 +1,3 @@
-import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import { gql } from '@apollo/client';
 
@@ -23,9 +22,6 @@ export const loadUser = async(client) => {
             }
           `
         });
-
-        return { user: res.data.user, isAuthenticated: true }
-        
 
     } catch(err) {
         console.log(err.message)
@@ -75,6 +71,7 @@ export const register = async(formData, client, history) => {
             mutation: gql`
             mutation {
             addUser(name: "${name}", email: "${email}", password: "${password}") {
+                id,
                 name,
                 email,
                 password
@@ -83,8 +80,7 @@ export const register = async(formData, client, history) => {
           `
         });
 
-
-        localStorage.setItem('token', `${res.data.user.email} / ${res.data.user.password}`);
+        localStorage.setItem('token', `${res.data.addUser.email} / ${res.data.addUser.password}`);
 
         await loadUser(client)
         

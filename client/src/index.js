@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import './style/style.css';
+import './style/auth.css';
+
+
 import { BrowserRouter as Router } from 'react-router-dom';
 
 

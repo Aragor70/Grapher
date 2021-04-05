@@ -47,7 +47,7 @@ const RootQuery = new GraphQLObjectType({
 
           const res = await axios.get(`http://localhost:8000/users/`);
           
-          return res.data.filter(el => el.email.toString() === args.email && el.password.toString() === args.password)[0] || false;
+          return res.data.filter(el => el.email.toString() === args.email && el.password.toString() === args.password)[0] || new Error();
 
         } catch (err) {
           console.log(err.message)
@@ -81,16 +81,19 @@ const mutation = new GraphQLObjectType({
       type: User,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
-        email: {type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
-
       },
       async resolve(parent, args) {
         try {
-          const res = await axios.post('http://localhost:8000/users', {
+          await axios.post('http://localhost:8000/users', {
             name: args.name, email: args.email, password: args.password
           })
-          return res.data
+
+          const res = await axios.get(`http://localhost:8000/users/`);
+
+          return res.data.filter(el => el.email.toString() === args.email && el.password.toString() === args.password)[0] || new Error();
+
         } catch (err) {
           console.log(err.message)
         }

@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Login from './interface/auth/Login';
 import Register from './interface/auth/Register';
-import { gql } from '@apollo/client';
 
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client';
@@ -20,6 +19,7 @@ const App = ({ history }) => {
   const [ isAuthenticated, setIsAuthenticated ] = useState(false)
 
   const [ user, setUser ] = useState(null);
+
   
   useEffect(() => {
     
@@ -46,45 +46,47 @@ const App = ({ history }) => {
   return (
     <Fragment>
       <ApolloProvider client={client}>
-      <header className="header-content">
-          <h1 onClick={e => history.push('/') }>Grapher</h1>
-      </header>
-      <main className="output">
-        <Switch>
-          <Route exact path="/">
+        
+          <header className="header-content">
+              <h1 onClick={e => history.push('/') }>Grapher</h1>
+          </header>
+          
+          <main className="output">
+            <Switch>
+              <Route exact path="/">
 
-            {
-              isAuthenticated && user ? <Fragment>
-                <p>{user.name}</p>
-                <p>You are logged in</p>
+                {
+                  isAuthenticated && user ? <Fragment>
+                    <p>{user.name}</p>
+                    <p>You are logged in</p>
 
-                <button onClick={e=> logout(history, setUser, setIsAuthenticated)}>log out</button>
+                    <button onClick={e=> logout(history, setUser, setIsAuthenticated)}>log out</button>
 
-              </Fragment> : <Fragment>
+                  </Fragment> : <Fragment>
 
-                  <p>Hi, Please log in.</p>
-                <p>
-                  <p>
-                    <span onClick={e => history.push('/login') }>log in</span>
-                  </p>
-                  <p>
-                    <span onClick={e => history.push('/register') }>register</span>
-                  </p>
-                </p>
+                    <p>
+                      <p>
+                        <button type="button" onClick={e => history.push('/login') }>log in</button>
+                      </p>
+                      <p>
+                        <button type="button" onClick={e => history.push('/register') }>register</button>
+                      </p>
+                    </p>
 
-              </Fragment>
-            }
-            
-          </Route>
-          <Route exact path="/login">
-            <Login client={client} isAuthenticated={isAuthenticated} />
-          </Route>
-          <Route exact path="/register">
-            <Register client={client} isAuthenticated={isAuthenticated} />
-          </Route>
+                  </Fragment>
+                }
+                
+              </Route>
+              <Route exact path="/login">
+                <Login client={client} isAuthenticated={isAuthenticated} />
+              </Route>
+              <Route exact path="/register">
+                <Register client={client} isAuthenticated={isAuthenticated} />
+              </Route>
 
-        </Switch>
-      </main>
+            </Switch>
+        </main>
+      
       </ApolloProvider>
     </Fragment>
   );

@@ -11,7 +11,7 @@ const Register = ({ client, history, isAuthenticated }) => {
             history.push('/')
         }
 
-    }, [])
+    }, [history, isAuthenticated])
 
     const [ formData, setFormData ] = useState({
         name: '',
@@ -43,22 +43,24 @@ const Register = ({ client, history, isAuthenticated }) => {
 
     return (
         <Fragment>
-            <form onSubmit={e=> handleSubmit(e)}> 
-                <h1>Register</h1>
+            <form onSubmit={e=> handleSubmit(e)} className="auth-form"> 
+                <p>Register</p>
 
-                <label className="auth-label">
+                <label className="input-label">name
                     <input type="text" className="auth-input" name='name' value={name} onChange={e=> handleChange(e)} />
                 </label>
-                <label className="auth-label">
+                <label className="input-label">email
                     <input type="text" className="auth-input" name='email' value={email} onChange={e=> handleChange(e)} />
                 </label>
-                <label className="auth-label">
+                <label className="input-label">password
                     <input type="text" className="auth-input" name='password' value={password} onChange={e=> handleChange(e)} />
                 </label>
-                <label className="auth-label">
+                <label className="input-label">password confirm
                     <input type="text" className="auth-input" name='passwordConfirm' value={passwordConfirm} onChange={e=> handleChange(e)} />
                 </label>
-                <button type="submit">log in</button>
+                <div className="auth-bottom">
+                <button className="auth-button" type="submit">register</button>
+                </div>
 
             </form>
         </Fragment>

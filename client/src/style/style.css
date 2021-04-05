@@ -1,0 +1,108 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+    
+}
+body, html
+{
+    width: 100vw;
+    height: 100vh;
+    margin: 0!important;
+    padding: 0!important;
+    text-align: justify;
+    word-wrap: break-word;
+    display: block;
+
+    background-color: #fff;
+    color: #000;
+    font-weight: 400;
+    font-family: 'Lato', sans-serif;
+
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+a, button, textarea, input
+{
+    outline: none;
+    color: #121212;
+    text-decoration: none;
+}
+
+a, button
+{
+    min-width: 100px;
+    font-weight: 400;
+    overflow: hidden;
+}
+a:hover, button:hover
+{
+    color: lightblue;
+}
+a:focus, button:focus
+{
+    color: #49c500;
+}
+a > button
+{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    
+}
+
+textarea
+{
+    resize: none;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+input
+{
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+hr
+{
+    color: #000;
+    width: 90%;
+}
+
+.output
+{
+    width: 100%;
+    padding: 15px;
+}
+
+.header-content
+{
+    width: 100%;
+    
+    padding: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    
+}
+
+@media (min-width: 760px) {
+
+.output
+{
+    width: 100%;
+    padding-left: 10vw;
+    padding-right: 10vw;
+}
+
+.header-content
+{
+    width: 100%;
+    padding-left: 10vw;
+    padding-right: 10vw;
+    
+}
+
+}
